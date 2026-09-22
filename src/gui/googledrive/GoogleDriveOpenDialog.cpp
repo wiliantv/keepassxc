@@ -184,10 +184,10 @@ void GoogleDriveOpenDialog::onOpenClicked()
 
     // Ask user where to save the local synchronized copy
     QString defaultDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    QString destination = FileDialog::getSaveFileName(this,
-                                                      tr("Choose Local Location for Database"),
-                                                      defaultDir + "/" + fileName,
-                                                      QString("%1 (*.kdbx)").arg(tr("KeePass 2 Database")));
+    QString destination = fileDialog()->getSaveFileName(this,
+                                                        tr("Choose Local Location for Database"),
+                                                        defaultDir + "/" + fileName,
+                                                        QString("%1 (*.kdbx)").arg(tr("KeePass 2 Database")));
 
     if (destination.isEmpty()) {
         return;

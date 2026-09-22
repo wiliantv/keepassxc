@@ -489,10 +489,10 @@ MainWindow::MainWindow()
     connect(m_ui->actionGoogleDriveSync, &QAction::triggered, this, &MainWindow::syncGoogleDrive);
 
     connect(GoogleDriveSyncManager::instance(), &GoogleDriveSyncManager::syncStarted, this, [this](const QString&) {
-        displayGlobalMessage(tr("Google Drive sync started…"), MessageWidget::Information, 3000);
+        displayGlobalMessage(tr("Google Drive sync started…"), MessageWidget::Information, true, 3000);
     });
     connect(GoogleDriveSyncManager::instance(), &GoogleDriveSyncManager::syncFinished, this, [this](const QString&, bool success, const QString& message) {
-        displayGlobalMessage(message, success ? MessageWidget::Positive : MessageWidget::Error, 5000);
+        displayGlobalMessage(message, success ? MessageWidget::Positive : MessageWidget::Error, true, 5000);
     });
 #endif
     connect(
