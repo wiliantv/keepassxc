@@ -245,6 +245,14 @@
      </property>
      <addaction name="separator"/>
     </widget>
+    <widget class="QMenu" name="menuGoogleDrive">
+     <property name="title">
+      <string>Google &amp;Drive</string>
+     </property>
+     <addaction name="actionGoogleDriveOpen"/>
+     <addaction name="actionGoogleDriveSave"/>
+     <addaction name="actionGoogleDriveSync"/>
+    </widget>
     <addaction name="actionDatabaseNew"/>
     <addaction name="actionDatabaseOpen"/>
     <addaction name="menuRecentDatabases"/>
@@ -265,6 +273,7 @@
     <addaction name="separator"/>
     <addaction name="actionDatabaseMerge"/>
     <addaction name="menuRemoteSync"/>
+    <addaction name="menuGoogleDrive"/>
     <addaction name="actionImport"/>
     <addaction name="menuExport"/>
     <addaction name="separator"/>
@@ -1365,6 +1374,33 @@
    </property>
    <property name="menuRole">
     <enum>QAction::TextHeuristicRole</enum>
+   </property>
+  </action>
+  <action name="actionGoogleDriveOpen">
+   <property name="text">
+    <string>Open From &amp;Google Drive…</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Database from Google Drive</string>
+   </property>
+  </action>
+  <action name="actionGoogleDriveSave">
+   <property name="text">
+    <string>Save To Google &amp;Drive…</string>
+   </property>
+   <property name="toolTip">
+    <string>Upload and link current database with Google Drive</string>
+   </property>
+  </action>
+  <action name="actionGoogleDriveSync">
+   <property name="text">
+    <string>Sync With Google Dri&amp;ve</string>
+   </property>
+   <property name="toolTip">
+    <string>Synchronize current database with Google Drive</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+G</string>
    </property>
   </action>
  </widget>

@@ -63,10 +63,15 @@ endif()
 
 # Minor Feature Flags
 option(KPXC_FEATURE_NETWORK "Include code that reaches out to external networks (e.g. downloading icons)" ON)
+option(KPXC_FEATURE_GOOGLE_DRIVE "Include Google Drive integration and smart synchronization" ON)
 option(KPXC_FEATURE_UPDATES "Include automatic update checks; disable for managed distributions" ON)
 option(KPXC_FEATURE_DOCS "Build offline documentation; requires asciidoctor tool" ON)
 
-# Reconcile update feature with overall network feature
+# Reconcile update and google drive features with overall network feature
+if(NOT KPXC_FEATURE_NETWORK AND KPXC_FEATURE_GOOGLE_DRIVE)
+    message(STATUS "Disabling KPXC_FEATURE_GOOGLE_DRIVE because KPXC_FEATURE_NETWORK is disabled")
+    set(KPXC_FEATURE_GOOGLE_DRIVE OFF)
+endif()
 if(NOT KPXC_FEATURE_NETWORK AND KPXC_FEATURE_UPDATES)
     message(STATUS "Disabling KPXC_FEATURE_UPDATES because KPXC_FEATURE_NETWORK is disabled")
     set(KPXC_FEATURE_UPDATES OFF)
@@ -84,6 +89,7 @@ if(UNIX AND NOT APPLE)
     add_feature_info("Secret Service" KPXC_FEATURE_FDOSECRETS "Replace system keyring with freedesktop.org Secret Service integration")
 endif()
 add_feature_info("Networking" KPXC_FEATURE_NETWORK "Code that can reach out to external networks is included (e.g. downloading icons)")
+add_feature_info("Google Drive" KPXC_FEATURE_GOOGLE_DRIVE "Google Drive integration and smart synchronization")
 add_feature_info("Update Checks" KPXC_FEATURE_UPDATES "Periodic update checks can be performed")
 add_feature_info("Documentation" KPXC_FEATURE_DOCS "Offline documentation")
 

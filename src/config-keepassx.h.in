@@ -23,6 +23,7 @@
 
 /* Minor Features */
 #cmakedefine KPXC_FEATURE_NETWORK
+#cmakedefine KPXC_FEATURE_GOOGLE_DRIVE
 #cmakedefine KPXC_FEATURE_UPDATES
 #cmakedefine KPXC_FEATURE_DOCS
 

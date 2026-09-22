@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GoogleDriveSettingsWidget</class>
+ <widget class="QWidget" name="GoogleDriveSettingsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="accountGroupBox">
+     <property name="title">
+      <string>Google Account</string>
+     </property>
+     <layout class="QHBoxLayout" name="accountLayout">
+      <item>
+       <widget class="QLabel" name="accountStatusLabel">
+        <property name="text">
+         <string>Not connected to Google Drive</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="accountSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="authButton">
+        <property name="text">
+         <string>Connect Account</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="syncGroupBox">
+     <property name="title">
+      <string>Synchronization Options</string>
+     </property>
+     <layout class="QVBoxLayout" name="syncLayout">
+      <item>
+       <widget class="QCheckBox" name="autoSyncCheckBox">
+        <property name="text">
+         <string>Automatically sync with Google Drive when saving the database</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="syncExplanationLabel">
+        <property name="text">
+         <string>KeePassXC uses bidirectional smart merge: entries edited or added in the cloud (e.g. from a mobile phone) and entries modified locally are safely merged together without data loss.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="apiCredentialsGroupBox">
+     <property name="title">
+      <string>Google Cloud OAuth Credentials (Optional)</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="clientIdLabel">
+        <property name="text">
+         <string>Client ID:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="clientIdLineEdit">
+        <property name="placeholderText">
+         <string>e.g. 1234567890-abcdef.apps.googleusercontent.com</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="clientSecretLabel">
+        <property name="text">
+         <string>Client Secret:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="clientSecretLineEdit">
+        <property name="echoMode">
+         <enum>QLineEdit::PasswordEchoOnEdit</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Enter your Google OAuth Client Secret</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QLabel" name="helpLabel">
+        <property name="text">
+         <string>You can create a free desktop OAuth 2.0 Client ID in the Google Cloud Console to avoid shared API quotas and authorization consent screen warnings.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="mainSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

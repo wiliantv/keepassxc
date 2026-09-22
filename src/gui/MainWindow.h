@@ -157,6 +157,12 @@ private slots:
     void disableMenuAndToolbar();
     void clearSSHAgent();
 
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+    void openGoogleDrive();
+    void saveGoogleDrive();
+    void syncGoogleDrive();
+#endif
+
 private:
     static const QString BaseWindowTitle;
 

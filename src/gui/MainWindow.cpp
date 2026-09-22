@@ -68,6 +68,14 @@
 #include "fdosecrets/FdoSecretsPlugin.h"
 #endif
 
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+#include "googledrive/GoogleDriveSettings.h"
+#include "googledrive/GoogleDriveSyncManager.h"
+#include "gui/googledrive/GoogleDriveOpenDialog.h"
+#include "gui/googledrive/GoogleDriveSaveDialog.h"
+#include "gui/googledrive/GoogleDriveSettingsPage.h"
+#endif
+
 #ifdef KPXC_FEATURE_BROWSER
 #include "browser/BrowserService.h"
 #endif
@@ -233,6 +241,10 @@ MainWindow::MainWindow()
     m_ui->settingsWidget->addSettingsPage(fdoSS);
 #endif
 
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+    m_ui->settingsWidget->addSettingsPage(new GoogleDriveSettingsPage());
+#endif
+
     connect(YubiKey::instance(), SIGNAL(userInteractionRequest()), SLOT(showYubiKeyPopup()), Qt::QueuedConnection);
     connect(YubiKey::instance(), SIGNAL(challengeCompleted()), SLOT(hideYubiKeyPopup()), Qt::QueuedConnection);
 
@@ -339,6 +351,12 @@ MainWindow::MainWindow()
     m_ui->actionQuit->setIcon(icons()->icon("application-exit"));
     m_ui->actionDatabaseMerge->setIcon(icons()->icon("database-merge"));
     m_ui->menuRemoteSync->setIcon(icons()->icon("remote-sync"));
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+    m_ui->menuGoogleDrive->setIcon(icons()->icon("remote-sync"));
+    m_ui->actionGoogleDriveOpen->setIcon(icons()->icon("document-open"));
+    m_ui->actionGoogleDriveSave->setIcon(icons()->icon("document-save"));
+    m_ui->actionGoogleDriveSync->setIcon(icons()->icon("remote-sync"));
+#endif
     m_ui->actionImport->setIcon(icons()->icon("document-import"));
     m_ui->menuExport->setIcon(icons()->icon("document-export"));
 
@@ -465,6 +483,18 @@ MainWindow::MainWindow()
     connect(m_ui->actionExportCsv, SIGNAL(triggered()), m_ui->tabWidget, SLOT(exportToCsv()));
     connect(m_ui->actionExportHtml, SIGNAL(triggered()), m_ui->tabWidget, SLOT(exportToHtml()));
     connect(m_ui->actionExportXML, SIGNAL(triggered()), m_ui->tabWidget, SLOT(exportToXML()));
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+    connect(m_ui->actionGoogleDriveOpen, &QAction::triggered, this, &MainWindow::openGoogleDrive);
+    connect(m_ui->actionGoogleDriveSave, &QAction::triggered, this, &MainWindow::saveGoogleDrive);
+    connect(m_ui->actionGoogleDriveSync, &QAction::triggered, this, &MainWindow::syncGoogleDrive);
+
+    connect(GoogleDriveSyncManager::instance(), &GoogleDriveSyncManager::syncStarted, this, [this](const QString&) {
+        displayGlobalMessage(tr("Google Drive sync started…"), MessageWidget::Information, 3000);
+    });
+    connect(GoogleDriveSyncManager::instance(), &GoogleDriveSyncManager::syncFinished, this, [this](const QString&, bool success, const QString& message) {
+        displayGlobalMessage(message, success ? MessageWidget::Positive : MessageWidget::Error, 5000);
+    });
+#endif
     connect(
         m_ui->actionLockDatabase, SIGNAL(triggered()), m_ui->tabWidget, SLOT(lockAndSwitchToFirstUnlockedDatabase()));
     connect(m_ui->actionLockDatabaseToolbar, SIGNAL(triggered()), m_ui->actionLockDatabase, SIGNAL(triggered()));
@@ -1001,6 +1031,10 @@ void MainWindow::updateMenuActionState()
     m_ui->menuRemoteSync->setEnabled(inDatabase || inDatabaseSettings);
     m_ui->menuExport->setEnabled(inDatabase);
     m_ui->actionDatabaseMerge->setEnabled(inDatabase);
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+    m_ui->actionGoogleDriveSave->setEnabled(databaseUnlocked);
+    m_ui->actionGoogleDriveSync->setEnabled(databaseUnlocked);
+#endif
 #ifdef KPXC_FEATURE_BROWSER
     m_ui->actionPasskeys->setEnabled(inDatabase || inReports);
     m_ui->actionImportPasskey->setEnabled(inDatabase);
@@ -2258,3 +2292,37 @@ bool MainWindowEventFilter::eventFilter(QObject* watched, QEvent* event)
 
     return QObject::eventFilter(watched, event);
 }
+
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+void MainWindow::openGoogleDrive()
+{
+    GoogleDriveOpenDialog dlg(this);
+    if (dlg.exec() == QDialog::Accepted) {
+        QString path = dlg.downloadedFilePath();
+        if (!path.isEmpty()) {
+            m_ui->tabWidget->addDatabaseTab(path);
+        }
+    }
+}
+
+void MainWindow::saveGoogleDrive()
+{
+    auto dbWidget = m_ui->tabWidget->currentDatabaseWidget();
+    if (!dbWidget || !dbWidget->database()) {
+        return;
+    }
+
+    GoogleDriveSaveDialog dlg(dbWidget->database(), this);
+    dlg.exec();
+}
+
+void MainWindow::syncGoogleDrive()
+{
+    auto dbWidget = m_ui->tabWidget->currentDatabaseWidget();
+    if (!dbWidget || !dbWidget->database()) {
+        return;
+    }
+
+    GoogleDriveSyncManager::instance()->syncDatabase(dbWidget->database());
+}
+#endif

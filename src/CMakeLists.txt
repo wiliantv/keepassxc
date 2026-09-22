@@ -319,6 +319,18 @@ if(KPXC_FEATURE_NETWORK)
             gui/IconDownloaderDialog.cpp)
 endif()
 
+if(KPXC_FEATURE_GOOGLE_DRIVE)
+    list(APPEND gui_SOURCES
+            googledrive/GoogleDriveSettings.cpp
+            googledrive/GoogleDriveOAuth.cpp
+            googledrive/GoogleDriveClient.cpp
+            googledrive/GoogleDriveSyncManager.cpp
+            gui/googledrive/GoogleDriveOpenDialog.cpp
+            gui/googledrive/GoogleDriveSaveDialog.cpp
+            gui/googledrive/GoogleDriveSettingsWidget.cpp
+            gui/googledrive/GoogleDriveSettingsPage.cpp)
+endif()
+
 add_subdirectory(cli)
 add_subdirectory(thirdparty)
 

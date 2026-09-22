@@ -36,6 +36,12 @@
 #include "gui/osutils/macutils/MacUtils.h"
 #endif
 #include "gui/wizard/NewDatabaseWizard.h"
+#include "config-keepassx.h"
+
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+#include "googledrive/GoogleDriveSettings.h"
+#include "googledrive/GoogleDriveSyncManager.h"
+#endif
 
 DatabaseTabWidget::DatabaseTabWidget(QWidget* parent)
     : QTabWidget(parent)
@@ -246,6 +252,14 @@ void DatabaseTabWidget::addDatabaseTab(DatabaseWidget* dbWidget, bool inBackgrou
     connect(dbWidget, SIGNAL(databaseModified()), SLOT(updateTabName()));
     connect(dbWidget, SIGNAL(databaseSaved()), SLOT(updateTabName()));
     connect(dbWidget, SIGNAL(databaseSaved()), SLOT(updateLastDatabases()));
+#ifdef KPXC_FEATURE_GOOGLE_DRIVE
+    connect(dbWidget, &DatabaseWidget::databaseSaved, [dbWidget]() {
+        if (dbWidget && dbWidget->database() && GoogleDriveSettings::instance()->isAutoSyncOnSave()
+            && GoogleDriveSyncManager::instance()->isDatabaseLinked(dbWidget->database())) {
+            GoogleDriveSyncManager::instance()->syncDatabase(dbWidget->database());
+        }
+    });
+#endif
     connect(dbWidget, SIGNAL(databaseUnlocked()), SLOT(updateTabName()));
     connect(dbWidget, SIGNAL(databaseUnlocked()), SLOT(emitDatabaseLockChanged()));
     connect(dbWidget, SIGNAL(databaseLocked()), SLOT(updateTabName()));
