@@ -1,0 +1,58 @@
+name: Build Linux
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'main'
+      - 'feature/**'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: Build Linux (x86_64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          # Install Botan (accept 3 or 2 depending on Ubuntu release)
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build g++ pkg-config \
+            qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-base-dev-tools qt6-svg-dev qt6-5compat-dev \
+            libargon2-dev libkeyutils-dev libminizip-dev libqrencode-dev zlib1g-dev \
+            asciidoctor libreadline-dev libpcsclite-dev libusb-1.0-0-dev libxi-dev libxtst-dev libgcrypt20-dev \
+            libbotan-3-dev || sudo apt-get install -y --no-install-recommends libbotan-2-dev
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DWITH_XC_ALL=ON \
+            -DKPXC_FEATURE_GOOGLE_DRIVE=ON \
+            -DWITH_TESTS=OFF
+
+      - name: Build KeePassXC
+        run: |
+          cmake --build build --parallel $(nproc)
+
+      - name: Package build
+        run: |
+          DESTDIR=dist cmake --install build
+          cd dist
+          tar -czvf ../keepassxc-linux-x86_64.tar.gz *
+          cd ..
+
+      - name: Upload Linux Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: keepassxc-linux-x86_64
+          path: keepassxc-linux-x86_64.tar.gz
+          retention-days: 14
