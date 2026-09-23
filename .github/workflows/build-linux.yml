@@ -19,16 +19,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install build tools and libraries
         run: |
+          set -e
           sudo apt-get update
-          # Install Botan (accept 3 or 2 depending on Ubuntu release)
           sudo apt-get install -y --no-install-recommends \
             build-essential cmake ninja-build g++ pkg-config \
-            qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-base-dev-tools qt6-svg-dev qt6-5compat-dev \
             libargon2-dev libkeyutils-dev libminizip-dev libqrencode-dev zlib1g-dev \
-            asciidoctor libreadline-dev libpcsclite-dev libusb-1.0-0-dev libxi-dev libxtst-dev libgcrypt20-dev \
-            libbotan-3-dev || sudo apt-get install -y --no-install-recommends libbotan-2-dev
+            asciidoctor libreadline-dev libpcsclite-dev libusb-1.0-0-dev libxi-dev libxtst-dev libgcrypt20-dev
+
+      - name: Install Botan
+        run: |
+          sudo apt-get install -y libbotan-2-dev || sudo apt-get install -y libbotan-3-dev
+
+      - name: Install Qt6
+        run: |
+          sudo apt-get install -y --no-install-recommends \
+            qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools \
+            qt6-base-dev-tools qt6-svg-dev qt6-5compat-dev
 
       - name: Configure CMake
         run: |
