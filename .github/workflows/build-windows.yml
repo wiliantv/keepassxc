@@ -36,6 +36,11 @@ jobs:
           restore-keys: |
             vcpkg-windows-
 
+      - name: Update vcpkg git baseline
+        shell: pwsh
+        run: |
+          git -C "$env:VCPKG_INSTALLATION_ROOT" fetch --unshallow -q 2>$null || git -C "$env:VCPKG_INSTALLATION_ROOT" fetch origin -q
+
       - name: Configure CMake
         shell: pwsh
         run: |
