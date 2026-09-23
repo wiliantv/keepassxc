@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.8.0-beta1 (2026-09-21)
+## 2.8.0-beta1 (2026-09-23)
 
 ### New Features
 - Add remote database synchronization and import using external tools [#7222, #10896, #11271]
@@ -50,6 +50,7 @@
 - Prevent mouse wheel scrolling from changing the unfocused alternative save method setting [#13358]
 - Fix password font size not following application font size [#13658]
 - Fix typos and documentation links [#10124, #10893, #9993]
+- Fix null pointer dereference in Secret Service integration [#13655]
 - Auto-Type: Support {PGDN} placeholder [#13463]
 - Auto-Type: Refactor Auto-Type plugins to integrate them into the main binary [#13469]
 - Browser: Fix showing and closing the password generator [#9984, #9743]
